@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% load static %}
+
+    <!-- Bootstrap -->
+    <link href="{% static 'schedule/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+
+    <!-- Styles -->
+    <link href="{% static 'schedule/css/style.css' %}" rel="stylesheet">
+
+    <title>Weekly Planner</title>
+</head>
+
+<body>
+    <header class="jumbotron">
+        <h1 class="text-center">
+            Weekly Planner
+        </h1>
+    </header>
+
+    <main class="container">
+        <div class="p-5 mb-5 border rounded">
+            <!-- Form to add event -->
+            <form id="form" class="form-inline mx-auto" action="/" method="POST"> {% csrf_token %}
+                <div class="form-group mr-4">
+                    <input type="text" class="form-control" placeholder="Title" name="title" required>
+                </div>
+
+                <div class="form-group mr-4">
+                    <select class="form-control" name="start_time" required>
+                        <option selected>Start hour...</option>
+                        {% for x in range %}
+                        <option value="{{x}}">{{x}}:00</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mr-4">
+                    <select class="form-control" name="end_time">
+                        <option selected>End hour...</option>
+                        {% for x in range %}
+                        <option value="{{x}}">{{x}}:00</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mr-4">
+                    <select class="form-control" name="day" required>
+                        <option selected>Day...</option>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="saturday">Saturday</option>
+                        <option value="sunday">Sunday</option>
+                    </select>
+                </div>
+
+                <button type="text" class="btn btn-primary">Add event</button>
+
+            </form>
+
+            <hr>
+            <form class="form" action="/" method="POST"> {% csrf_token %}
+                <input type="hidden" name="reset_events" value=True>
+                <button type="text" class="btn btn-danger">Delete all events</button>
+            </form>
+        </div>
+
+        <div class="font-responsive">
+            <!-- Displays the table with the events-->
+            <div class="row bg-dark text-white">
+                <div class="col-1 border text-center p-3 long"></div>
+                <div class="col border text-center p-3 long">Monday</div>
+                <div class="col border text-center p-3 long">Tuesday</div>
+                <div class="col border text-center p-3 long">Wednesday</div>
+                <div class="col border text-center p-3 long">Thursday</div>
+                <div class="col border text-center p-3 long">Friday</div>
+                <div class="col border text-center p-3 long">Saturday</div>
+                <div class="col border text-center p-3 long">Sunday</div>
+            </div>
+
+            <div class="row bg-dark text-white">
+                <div class="col-1 border text-center p-3 short"></div>
+                <div class="col border text-center p-3 short">Mon</div>
+                <div class="col border text-center p-3 short">Tue</div>
+                <div class="col border text-center p-3 short">Wed</div>
+                <div class="col border text-center p-3 short">Thu</div>
+                <div class="col border text-center p-3 short">Fri</div>
+                <div class="col border text-center p-3 short">Sat</div>
+                <div class="col border text-center p-3 short">Sun</div>
+            </div>
+
+            <!-- Displays the events -->
+            {% autoescape off %}
+            {{events}}
+            {% endautoescape %}
+        </div>
+
+
+        <div id="score" class="jumbotron p-3 w-25 mx-auto text-center mt-5">
+            <h2>Done: {{percentage_done}}%</h2>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-faded text-center py-5">
+        <div class="container">
+            <p class="m-0">
+                <a href="#" class="text-white">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+                <a href="#" class="text-white">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+                <a href="#" class="text-white">
+                    <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            </p>
+            <p class="m-0">
+                <a href="sample.html" class="text-white">Política de privacidad</a> ·
+                <a href="sample.html" class="text-white">Aviso legal</a> ·
+                <a href="sample.html" class="text-white">Cookies</a>
+            </p>
+            <p class="m-0">&copy; Weekly Planner</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap -->
+    {% if error is not None %}
+    <script>
+        alert("{{error}}")
+
+    </script>
+    {% endif %}
+
+
+    <script src="{% static 'schedule/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'schedule/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+        checkPosition()
+
+        $(document).load($(window).bind("resize", checkPosition));
+
+        function checkPosition() {
+            if ($(window).width() < 1000) {
+                $(".short").css('display', 'block');
+                $(".long").css('display', 'none');
+            } else {
+                $(".short").css('display', 'none');
+                $(".long").css('display', 'block');
+            }
+
+            if ($(window).width() < 770) {
+                $('.font-responsive').css('font-size', '0.8rem')
+                $('#score').removeClass('w-25')
+                $('#score').addClass('w-75')
+                $('#form').removeClass('form-inline')
+                $('#form').addClass('form')
+            } else {
+                $('.font-responsive').css('font-size', '1rem')
+                $('#score').addClass('w-25')
+                $('#score').removeClass('w-75')
+                $('#form').removeClass('form')
+                $('#form').addClass('form-inline')
+            }
+
+            if ($(window).width() < 520) {
+                $('.font-responsive').css('font-size', '0.5rem')
+            }
+        }
+    </script>
+
+</body>
+
+</html>

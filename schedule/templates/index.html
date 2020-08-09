@@ -92,14 +92,14 @@
             </div>
 
             <div class="row bg-dark text-white">
-                <div class="col-1 border text-center p-3 short"></div>
-                <div class="col border text-center p-3 short">Mon</div>
-                <div class="col border text-center p-3 short">Tue</div>
-                <div class="col border text-center p-3 short">Wed</div>
-                <div class="col border text-center p-3 short">Thu</div>
-                <div class="col border text-center p-3 short">Fri</div>
-                <div class="col border text-center p-3 short">Sat</div>
-                <div class="col border text-center p-3 short">Sun</div>
+                <div class="col-1 border text-center p-2 short"></div>
+                <div class="col border text-center p-2 short">Mon</div>
+                <div class="col border text-center p-2 short">Tue</div>
+                <div class="col border text-center p-2 short">Wed</div>
+                <div class="col border text-center p-2 short">Thu</div>
+                <div class="col border text-center p-2 short">Fri</div>
+                <div class="col border text-center p-2 short">Sat</div>
+                <div class="col border text-center p-2 short">Sun</div>
             </div>
 
             <!-- Displays the events -->
@@ -138,9 +138,9 @@
                 </a>
             </p>
             <p class="m-0">
-                <a href="sample.html" class="text-white">Política de privacidad</a> ·
-                <a href="sample.html" class="text-white">Aviso legal</a> ·
-                <a href="sample.html" class="text-white">Cookies</a>
+                <a href="/" class="text-white">Política de privacidad</a> ·
+                <a href="/" class="text-white">Aviso legal</a> ·
+                <a href="/" class="text-white">Cookies</a>
             </p>
             <p class="m-0">&copy; Weekly Planner</p>
         </div>
@@ -167,23 +167,24 @@
             if ($(window).width() < 1000) {
                 $(".short").css('display', 'block');
                 $(".long").css('display', 'none');
+                $('#form').removeClass('form-inline')
+                $('#form').addClass('form')
             } else {
                 $(".short").css('display', 'none');
                 $(".long").css('display', 'block');
+                $('#form').removeClass('form')
+                $('#form').addClass('form-inline')
             }
 
             if ($(window).width() < 770) {
                 $('.font-responsive').css('font-size', '0.8rem')
                 $('#score').removeClass('w-25')
                 $('#score').addClass('w-75')
-                $('#form').removeClass('form-inline')
-                $('#form').addClass('form')
+                
             } else {
                 $('.font-responsive').css('font-size', '1rem')
                 $('#score').addClass('w-25')
                 $('#score').removeClass('w-75')
-                $('#form').removeClass('form')
-                $('#form').addClass('form-inline')
             }
 
             if ($(window).width() < 520) {

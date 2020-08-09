@@ -80,7 +80,8 @@ def display_events():
                 id = event.get('id')
                 day_options = ''
                 hour_options = ''
-                completed_html = '<input name="modify_completed" type="checkbox" class="form-check-input text-dark"'
+                completed_html = '''<input name="modify_completed" type="checkbox"
+                                    class="form-check-input text-dark"'''
 
                 if event.get('completed'):
                     completed_html += 'checked'
@@ -154,16 +155,11 @@ def display_events():
                                         </label>
                                     </div>
                                         <div class="btn-group">
-                                            <button type="text" class="btn btn-warning mr-1 rounded">Modify</button>
-                                            
-                                    </form> 
-
-                                            <form class="form" action="/" method="GET">
-                                                <input type="hidden" name="delete_event" value="%s">
-                                                <button type="text" class="btn btn-danger ml-1 rounded">Delete</button>
-                                            </form>
-                                        </div>       
-                                </div>   
+                                            <a href="/?delete_event=%s" class="btn btn-danger mr-1 rounded">Delete</a>
+                                            <button type="text" class="btn btn-warning ml-1 rounded">Modify</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>''' % (id, title, id, id, title, hour_options, day_options, completed_html, id)
@@ -182,20 +178,20 @@ def schedule(request):
 
     if request.POST.get("title"):
         if not add_event(request.POST["title"],
-                    request.POST["start_time"], request.POST["end_time"], request.POST["day"]):
+                         request.POST["start_time"], request.POST["end_time"], request.POST["day"]):
             error = "An event already exists at that time"
 
     if request.POST.get("reset_events"):
         Event.objects.all().delete()
 
     if request.GET.get("modify_event_id"):
-        if (request.GET.get("modify_completed")):
+        if request.GET.get("modify_completed"):
             if not modify_event(request.GET["modify_event_id"], request.GET["modify_title"],
-                         request.GET["modify_start_time"], request.GET["modify_day"], True):
+                                request.GET["modify_start_time"], request.GET["modify_day"], True):
                 error = "An event already exists at that time"
         else:
             if not modify_event(request.GET["modify_event_id"], request.GET["modify_title"],
-                         request.GET["modify_start_time"], request.GET["modify_day"], False):
+                                request.GET["modify_start_time"], request.GET["modify_day"], False):
                 error = "An event already exists at that time"
 
     if request.GET.get("delete_event"):
@@ -203,4 +199,6 @@ def schedule(request):
 
     percentage_done = '{:3.2f}'.format(calc_percentage_done())
 
-    return render(request, 'index.html', {"percentage_done": percentage_done, "events": display_events(), "range": range(24), "error": error})
+    return render(request, 'index.html', {"percentage_done": percentage_done,
+                                          "events": display_events(), "range": range(24),
+                                          "error": error})
